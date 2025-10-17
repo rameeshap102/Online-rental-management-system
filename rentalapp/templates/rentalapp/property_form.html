@@ -1,0 +1,112 @@
+{% extends "rentalapp/base.html" %}
+
+{% block title %}{{ form.instance.pk|yesno:"Edit Property,Add Property" }} - RentEasy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+          <h3 class="text-center mb-4 fw-bold text-success">
+            {% if form.instance.pk %}
+              <i class="bi bi-pencil-square"></i> Edit Property
+            {% else %}
+              <i class="bi bi-plus-circle"></i> Add Property
+            {% endif %}
+          </h3>
+
+          <form method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <!-- Show Form Errors -->
+            {% if form.errors %}
+              <div class="alert alert-danger">
+                <ul class="mb-0">
+                  {% for field in form %}
+                    {% for error in field.errors %}
+                      <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                  {% endfor %}
+                  {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Title</label>
+                {{ form.title }}
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label class="form-label">District</label>
+                {{ form.district }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Address</label>
+              {{ form.address }}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              {{ form.description }}
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Rent (₹)</label>
+                {{ form.rent }}
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Bedrooms</label>
+                {{ form.bedrooms }}
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Bathrooms</label>
+                {{ form.bathrooms }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Size (sq ft)</label>
+                {{ form.size }}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Property Type</label>
+                {{ form.property_type }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Upload Image</label>
+              {{ form.image }}
+            </div>
+
+            <div class="form-check mb-3">
+              {{ form.available }}
+              <label class="form-check-label">Available</label>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">
+              {% if form.instance.pk %}
+                Update Property
+              {% else %}
+                Add Property
+              {% endif %}
+            </button>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

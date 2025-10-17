@@ -1,0 +1,23 @@
+{% extends "rentalapp/base.html" %}
+
+{% block title %}Get Started - RentEasy{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+  <!-- Page Header -->
+  <h2 class="fw-bold mb-3">Welcome to RentEasy!</h2>
+  <p class="lead text-muted mb-5">
+    Choose whether you are a <strong>Landlord</strong> or <strong>Tenant</strong> to start exploring properties or listing yours.
+  </p>
+
+  <!-- Role Selection Buttons -->
+  <div class="d-flex justify-content-center gap-3 flex-wrap">
+    <a href="{% url 'signup' %}?role=landlord" class="btn btn-success btn-lg rounded-pill px-4">
+      <i class="bi bi-building me-2"></i> I am a Landlord
+    </a>
+    <a href="{% url 'signup' %}?role=tenant" class="btn btn-primary btn-lg rounded-pill px-4">
+      <i class="bi bi-person me-2"></i> I am a Tenant
+    </a>
+  </div>
+</div>
+{% endblock %}

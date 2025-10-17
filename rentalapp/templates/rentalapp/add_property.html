@@ -1,0 +1,23 @@
+{% extends 'rentalapp/base.html' %}
+{% block title %}Add Property{% endblock %}
+
+{% block content %}
+<h2 style="text-align: center;">Add New Property</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <p>{{ form.title.label_tag }} {{ form.title }}</p>
+    <p>{{ form.description.label_tag }} {{ form.description }}</p>
+    <p>{{ form.district.label_tag }} {{ form.district }}</p>
+    <p>{{ form.rent.label_tag }} {{ form.rent }}</p>
+    <p>{{ form.image.label_tag }} {{ form.image }}</p>
+    <p>{{ form.available.label_tag }} {{ form.available }} </p>
+    <p>{{ form.address.label_tag }} {{ form.address }}</p>
+
+   
+
+    <button type="submit" class="btn">Add Property</button>
+</form>
+
+
+{% endblock %}

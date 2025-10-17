@@ -1,0 +1,79 @@
+{% extends 'rentalapp/base.html' %}
+{% load static %}
+
+{% block title %}{{ property.title }} - RentEasy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row">
+    <!-- Image -->
+    <div class="col-md-6">
+      {% if property.image %}
+        <img src="{{ property.image.url }}" alt="{{ property.title }}" class="img-fluid rounded shadow-sm">
+      {% else %}
+        <img src="{% static 'rentalapp/images/placeholder.jpg' %}" class="img-fluid rounded shadow-sm" alt="No Image">
+      {% endif %}
+    </div>
+
+    <!-- Info -->
+    <div class="col-md-6">
+      <h2>
+        {{ property.title }}
+        {% if not property.available %}
+          <span class="badge bg-danger">Unavailable</span>
+        {% endif %}
+      </h2>
+      <h4 class="{% if not property.available %}text-danger fw-bold{% else %}text-success{% endif %}">
+        ₹{{ property.rent }}/month
+      </h4>
+      <p class="text-muted">
+        📍 {{ property.address }}, {{ property.get_district_display }}
+      </p>
+      <ul class="list-unstyled">
+        <li>🛏 {{ property.bedrooms }} Bedrooms</li>
+        <li>🛁 {{ property.bathrooms }} Bathrooms</li>
+        <li>📐 {{ property.size }} sq ft</li>
+        <li>🏠 {{ property.property_type }}</li>
+      </ul>
+      <p class="card-text text-muted">
+  👤 Owner: 
+  {% if property.owner %}
+    {% if property.owner.get_full_name %}
+      {{ property.owner.get_full_name }}
+    {% else %}
+      {{ property.owner.username }}
+    {% endif %}
+  {% else %}
+    N/A
+  {% endif %}
+</p>
+
+      <p>{{ property.description }}</p>
+
+      {% if property.available %}
+        {% if user.is_authenticated %}
+          {% if user.role == "tenant" %}
+            <a href="{% url 'book_property' property.id %}" class="btn btn-success">
+              <i class="bi bi-calendar-check"></i> Book Now
+            </a>
+          {% else %}
+            <p class="text-warning fw-bold">
+              Only tenants can book this property. Please log in with a tenant account.
+            </p>
+          {% endif %}
+         <a href="{% url 'contact_landlord' property.id %}" class="btn btn-outline-success">
+  <i class="bi bi-envelope"></i> Contact Landlord
+</a>
+
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-success">
+            <i class="bi bi-box-arrow-in-right"></i> Login as Tenant to Book
+          </a>
+        {% endif %}
+      {% else %}
+        <button class="btn btn-danger" disabled>Not Available</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

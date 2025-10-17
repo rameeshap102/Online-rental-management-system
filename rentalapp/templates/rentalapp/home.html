@@ -1,0 +1,159 @@
+{% extends 'rentalapp/base.html' %}
+{% block title %}Home - RentEasy{% endblock %}
+
+{% block content %}
+<!-- ✅ Hero Section: Eye-catching banner with call-to-action -->
+<div class="hero">
+  <div class="container">
+    <h1>Find Your Perfect Home in Kerala</h1>
+    <p>Discover verified rental properties across Kerala</p>
+    <a href="{% url 'property_list' %}" class="btn btn-light btn-lg">Browse Properties</a>
+    <a href="{% url 'list_property_redirect' %}" class="btn btn-success btn-lg">List Your Property</a>
+  </div>
+</div>
+
+<!-- ✅ Search Section: Filter properties by district, rent, bedrooms, and type -->
+<section class="py-5 bg-light">
+  <div class="container my-5">
+    <!-- Section Title -->
+    <h3 class="fw-bold text-center mb-4">Find Your Ideal Property</h3>
+
+    <!-- Property Search Form -->
+    <form method="get" action="{% url 'property_list' %}" class="row g-3">
+      <!-- District Dropdown -->
+      <div class="col-md-3">
+        <select name="district" class="form-select">
+          <option value="">All Districts</option>
+          {% for d, name in DISTRICTS %}
+            <option value="{{ d }}">{{ name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Max Rent -->
+      <div class="col-md-2">
+        <input type="number" name="max_rent" class="form-control" placeholder="Max Rent" min="1000">
+      </div>
+
+      <!-- Bedrooms -->
+      <div class="col-md-2">
+        <input type="number" name="bedrooms" class="form-control" placeholder="Bedrooms" min="1">
+      </div>
+
+      <!-- Property Type -->
+      <div class="col-md-3">
+        <select name="property_type" class="form-select">
+          <option value="">Any Type</option>
+          {% for type, label in PROPERTY_TYPES %}
+            <option value="{{ type }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Search Button -->
+      <div class="col-md-2">
+        <button class="btn btn-success w-100">Search Properties</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ✅ Featured Properties Section -->
+<div class="container">
+  <h3 class="fw-bold text-center mb-4">Featured Properties</h3>
+  <div class="row">
+    {% for p in featured_properties %}
+      <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+          <!-- Property Image -->
+          {% if p.image %}
+            <img src="{{ p.image.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
+          {% endif %}
+          <!-- Property Details -->
+          <div class="card-body">
+            <h5 class="card-title">🏠 {{ p.title }}</h5>
+            <p class="text-muted">📍 {{ p.district }}</p>
+            <p><strong>💰 ₹{{ p.rent }}</strong> /month</p>
+            <ul class="list-unstyled mb-0">
+              <li>🛏 {{ p.bedrooms }} Bedrooms</li>
+              <li>🛁 {{ p.bathrooms }} Bathrooms</li>
+              <li>📐 {{ p.size }} sq ft</li>
+              <li>🏡 {{ p.property_type }}</li>
+            </ul>
+            <!-- Property Detail Button -->
+            <a href="{% url 'property_detail' p.id %}" class="btn btn-success w-100">
+              🔍 View Details
+            </a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-center">No properties available yet.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ✅ Why Choose Us Section -->
+<section class="py-5 bg-light">
+  <div class="container text-center">
+    <h2 class="mb-4 fw-bold">Why Choose Us</h2>
+    <p class="mb-5 text-muted">Experience the best in rental property services</p>
+
+    <div class="row g-4">
+      <!-- Verified Properties -->
+      <div class="col-md-3">
+        <div class="p-4 shadow-sm rounded bg-white h-100">
+          <div class="mb-3 text-success fs-1">
+            <i class="bi bi-shield-check"></i>
+          </div>
+          <h5 class="fw-semibold">Verified Properties</h5>
+          <p class="text-muted small">All properties are verified and genuine with proper documentation</p>
+        </div>
+      </div>
+
+      <!-- 24/7 Support -->
+      <div class="col-md-3">
+        <div class="p-4 shadow-sm rounded bg-white h-100">
+          <div class="mb-3 text-primary fs-1">
+            <i class="bi bi-headset"></i>
+          </div>
+          <h5 class="fw-semibold">24/7 Support</h5>
+          <p class="text-muted small">Round the clock customer support for all your queries and concerns</p>
+        </div>
+      </div>
+
+      <!-- Best Prices -->
+      <div class="col-md-3">
+        <div class="p-4 shadow-sm rounded bg-white h-100">
+          <div class="mb-3 text-danger fs-1">
+            <i class="bi bi-currency-rupee"></i>
+          </div>
+          <h5 class="fw-semibold">Best Prices</h5>
+          <p class="text-muted small">Competitive rental prices with transparent pricing and no hidden costs</p>
+        </div>
+      </div>
+
+      <!-- Prime Locations -->
+      <div class="col-md-3">
+        <div class="p-4 shadow-sm rounded bg-white h-100">
+          <div class="mb-3 text-warning fs-1">
+            <i class="bi bi-geo-alt"></i>
+          </div>
+          <h5 class="fw-semibold">Prime Locations</h5>
+          <p class="text-muted small">Properties in the best locations across Kerala with great connectivity</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ✅ Call to Action Section -->
+<section class="py-5 text-center text-white" style="background-color:#2f9e44;">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Ready to Find Your Dream Home?</h2>
+    <p class="mb-4">Join thousands of satisfied tenants who found their perfect rental property with us</p>
+    <a href="{% url 'browse_properties' %}" class="btn btn-light btn-lg me-2">Browse Properties</a>
+    <a href="{% url 'get_started' %}" class="btn btn-outline-light btn-lg">Get Started</a>
+  </div>
+</section>
+{% endblock %}

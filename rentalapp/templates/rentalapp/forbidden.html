@@ -1,0 +1,56 @@
+{% extends "rentalapp/base.html" %}
+
+{% block content %}
+<!-- ===============================
+     ACCESS DENIED / FORBIDDEN PAGE
+     File: access_denied.html
+     Purpose: Restricts unauthorized 
+     users from accessing role-specific 
+     pages and guides them accordingly.
+   =============================== -->
+
+<div class="container my-5 text-center">
+  <!-- Alert Box -->
+  <div class="alert alert-warning shadow-sm p-5 rounded-3">
+    
+    <!-- Warning Icon -->
+    <i class="bi bi-exclamation-triangle display-4 text-warning"></i>
+
+    <!-- Main Heading -->
+    <h2 class="fw-bold mt-3">Access Denied</h2>
+
+    <!-- Explanation Text -->
+    <p class="mt-2">
+      {% if user.is_authenticated %}
+        You are logged in as a <strong>{{ user.role|title }}</strong>.  
+        This page is only available to 
+        {% if user.role == "tenant" %}
+          <strong>Landlords</strong>.
+        {% elif user.role == "landlord" %}
+          <strong>Tenants</strong>.
+        {% else %}
+          authorized users.
+        {% endif %}
+      {% else %}
+        You need to log in to access this page.
+      {% endif %}
+    </p>
+
+    <!-- Action Buttons -->
+    {% if not user.is_authenticated %}
+      <!-- Show Login if not logged in -->
+      <a href="{% url 'login' %}" class="btn btn-success mt-3">
+        <i class="bi bi-box-arrow-in-right"></i> Login
+      </a>
+    {% else %}
+      <!-- If logged in: Logout + Home -->
+      <a href="{% url 'logout' %}" class="btn btn-outline-success mt-3 me-2">
+        <i class="bi bi-box-arrow-right"></i> Logout
+      </a>
+      <a href="{% url 'home' %}" class="btn btn-success mt-3">
+        <i class="bi bi-house"></i> Back to Home
+      </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "rentalapp/base.html" %}
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h4 class="mb-4 text-center">Edit Profile</h4>
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="text-center mt-3">
+              <button type="submit" class="btn btn-success">Save Changes</button>
+
+              {# ✅ Role-aware Cancel link #}
+              <a href="{% if user.role == 'tenant' %}
+                         {% url 'tenant_dashboard' %}
+                       {% else %}
+                         {% url 'landlord_dashboard' %}
+                       {% endif %}" 
+                 class="btn btn-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

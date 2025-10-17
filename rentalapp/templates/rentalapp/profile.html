@@ -1,0 +1,35 @@
+{% extends "rentalapp/base.html" %}
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+          <h4 class="mb-4">My Profile</h4>
+
+          <p><strong>Full Name:</strong> {{ user.full_name }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
+          <p><strong>Role:</strong> {{ user.role|title }}</p>
+
+          <div class="mt-4">
+            <a href="{% if user.role == 'tenant' %}
+                        {% url 'tenant_edit_profile' %}
+                      {% else %}
+                        {% url 'landlord_edit_profile' %}
+                      {% endif %}" 
+               class="btn btn-success">Edit Profile</a>
+
+            <a href="{% if user.role == 'tenant' %}
+                        {% url 'tenant_dashboard' %}
+                      {% else %}
+                        {% url 'landlord_dashboard' %}
+                      {% endif %}" 
+               class="btn btn-secondary">Back to Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'rentalapp/base.html' %}
+{% load static %}
+
+{% block title %}Available Properties - RentEasy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="mb-4 text-center">Available Properties</h2>
+
+  <!-- Filters -->
+  <form method="get" class="row g-3 mb-4 justify-content-center">
+    <div class="col-md-3">
+      <select name="district" class="form-select">
+  <option value="all">All Districts</option>
+  {% for d, name in DISTRICTS %}
+  <option value="{{ d }}" {% if request.GET.district == d %}selected{% endif %}>{{ name }}</option>
+  {% endfor %}
+</select>
+
+    </div>
+    <div class="col-md-4">
+      <input type="text" name="q" class="form-control" placeholder="Search by title..."
+             value="{{ search_query|default:'' }}">
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-success w-100">Filter</button>
+    </div>
+  </form>
+<!-- Property Cards -->
+<div class="row">
+  {% for property in properties %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100 {% if not property.available %}border-danger{% endif %}">
+        {% if property.image %}
+          <img src="{{ property.image.url }}" class="card-img-top" alt="{{ property.title }}">
+        {% else %}
+          <img src="{% static 'rentalapp/images/placeholder.jpg' %}" class="card-img-top" alt="No image">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">
+            {{ property.title }}
+            {% if not property.available %}
+              <span class="badge bg-danger">Unavailable</span>
+            {% endif %}
+          </h5>
+          <p class="card-text text-muted">
+            📍 {{ property.get_district_display }}
+          </p>
+        
+          <p class="card-text fw-bold {% if not property.available %}text-danger{% else %}text-success{% endif %}">
+            ₹{{ property.rent }}/month
+          </p>
+          <a href="{% url 'property_detail' property.pk %}" 
+             class="btn {% if property.available %}btn-success{% else %}btn-secondary disabled{% endif %} w-100">
+           🔍 View Details
+          </a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-center">No properties found.</p>
+  {% endfor %}
+</div>
+
+  
+  
+</div>
+{% endblock %}

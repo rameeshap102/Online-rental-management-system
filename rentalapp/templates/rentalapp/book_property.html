@@ -1,0 +1,41 @@
+{% extends "rentalapp/base.html" %}
+
+{% block content %}
+<!-- ===============================
+     BOOK PROPERTY PAGE
+     File: book_property.html
+     Purpose: Allows a tenant to send a booking 
+     request for a property. Shows success message 
+     after submission or booking form otherwise.
+   =============================== -->
+
+<div class="container mt-5">
+  <!-- Page Heading -->
+  <h2>Book {{ property.title }}</h2>
+
+  {% if success %}
+    <!-- Success Message -->
+    <div class="alert alert-success mt-3">
+      ✅ Booking request sent successfully! 
+      Waiting for landlord approval.
+    </div>
+
+    <!-- Redirect Button -->
+    <a href="{% url 'tenant_dashboard' %}" class="btn btn-primary mt-3">
+      Go to Dashboard
+    </a>
+
+  {% else %}
+    <!-- Booking Form -->
+    <form method="post" class="mt-3">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <!-- Confirm Booking Button -->
+      <button type="submit" class="btn btn-success">
+        Confirm Booking
+      </button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

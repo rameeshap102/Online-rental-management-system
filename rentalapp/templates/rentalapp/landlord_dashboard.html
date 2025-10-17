@@ -1,0 +1,422 @@
+{% extends "rentalapp/base.html" %}
+
+{% block content %}
+<div class="container-fluid my-4">
+  <div class="row">
+
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2">
+      <div class="shadow-sm p-3 bg-light rounded h-100">
+
+        <!-- Sidebar Header -->
+        <div class="text-center py-3 border-bottom mb-3">
+          <i class="bi bi-building" style="font-size: 3rem; color: #198754;"></i>
+          <p class="fw-bold mb-0">{{ landlord.first_name }} {{ landlord.last_name }}</p>
+          <p class="text-muted small mb-0">{{ landlord.email }}</p>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <ul class="nav flex-column nav-pills">
+          <li class="nav-item">
+            <a class="nav-link {% if section == 'overview' %}active{% endif %}" 
+               href="{% url 'landlord_dashboard' %}?section=overview">
+              <i class="bi bi-speedometer2 me-2"></i> Overview
+            </a>
+          </li>
+
+         <li class="nav-item">
+          <a class="nav-link {% if section == 'my_properties' %}active{% endif %}" 
+         href="{% url 'landlord_dashboard' %}?section=my_properties">
+        <i class="bi bi-house-door me-2"></i> Manage Property
+         </a>
+        </li>
+          
+          <li class="nav-item">
+            <a class="nav-link {% if section == 'applications' %}active{% endif %}" 
+               href="{% url 'landlord_dashboard' %}?section=applications">
+              <i class="bi bi-people me-2"></i> Applications
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if section == 'bookings' %}active{% endif %}" 
+               href="{% url 'landlord_dashboard' %}?section=bookings">
+              <i class="bi bi-calendar-check me-2"></i> Bookings
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if section == 'payments' %}active{% endif %}" 
+               href="{% url 'landlord_dashboard' %}?section=payments">
+              <i class="bi bi-cash-coin me-2"></i> Payments
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if section == 'maintenance' %}active{% endif %}" 
+               href="{% url 'landlord_dashboard' %}?section=maintenance">
+              <i class="bi bi-tools me-2"></i> Maintenance
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if section == 'profile' %}active{% endif %}" 
+               href="{% url 'landlord_dashboard' %}?section=profile">
+              <i class="bi bi-person me-2"></i> Profile
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9 col-lg-10">
+      
+      <!-- Page Heading -->
+      <h3 class="fw-bold mb-2 text-success">Landlord Dashboard</h3>
+
+      <!-- Landlord Info Card -->
+      <div class="card mb-4 shadow-sm p-3 d-flex align-items-center flex-row">
+       
+        <div class="ms-3">
+          <h5 class="mb-0">Welcome back, <strong>{{ landlord.first_name }} {{ landlord.last_name }}</strong>!</h5>
+          <small class="text-muted">{{ landlord.email }}</small>
+        </div>
+      </div>
+
+      
+
+
+      
+      <!-- === Overview Section === -->
+      {% if section == "overview" %}
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <h6>Total Properties</h6>
+              <h4 class="fw-bold">{{ total_properties }}</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <h6>Monthly Income</h6>
+              <h4 class="fw-bold text-success">₹{{ monthly_income }}</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <h6>Occupancy Rate</h6>
+              <h4 class="fw-bold">{{ occupancy_rate }}</h4>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center shadow-sm">
+            <div class="card-body">
+              <h6>Applications</h6>
+              <h4 class="fw-bold">{{ applications_count|default:"0" }}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="text-success"><i class="bi bi-people me-2"></i> Recent Applications</h5>
+          <ul class="list-group list-group-flush">
+            {% for app in recent_applications %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ app.user.full_name }}</strong> applied for 
+                <em>{{ app.property.title }}</em>
+                <br>
+                <small class="text-muted">{{ app.start_date }} → {{ app.end_date }}</small>
+              </div>
+              <div>
+                {% if app.status == "pending" %}
+                  <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="booking_id" value="{{ app.id }}">
+                    <button type="submit" name="action" value="approve" class="btn btn-sm btn-success">Approve</button>
+                    <button type="submit" name="action" value="reject" class="btn btn-sm btn-danger">Reject</button>
+                  </form>
+                {% elif app.status == "approved" %}
+                  <span class="badge bg-success">Approved</span>
+                {% else %}
+                  <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+              </div>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-muted">No recent applications</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}   
+
+<!-- === My Properties Section === -->
+{% if section == "my_properties" %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="text-success"><i class="bi bi-house-door me-2"></i> My Properties</h5>
+  <a href="{% url 'add_property' %}" class="btn btn-success btn-sm">
+    <i class="bi bi-plus-circle"></i> Add Property
+  </a>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered align-middle">
+    <thead class="table-success">
+      <tr>
+        <th>Title</th>
+        <th>Type</th>
+        <th>District</th>
+        <th>Rent (₹)</th>
+        <th>Bedrooms</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for prop in my_properties %}
+      <tr>
+        <td>{{ prop.title }}</td>
+        <td>{{ prop.property_type }}</td>
+        <td>{{ prop.district }}</td>
+        <td>{{ prop.rent }}</td>
+        <td>{{ prop.bedrooms }}</td>
+        <td>
+          <a href="{% url 'edit_property' prop.pk %}" class="btn btn-success">
+            <i class="bi bi-pencil-square"></i> Edit
+          </a>
+          <!-- Delete Button trigger modal -->
+<button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ prop.id }}">
+    <i class="bi bi-trash"></i> Delete
+</button>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal{{ prop.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ prop.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger" id="deleteModalLabel{{ prop.id }}">
+            <i class="bi bi-exclamation-triangle me-1"></i> Confirm Delete
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete <strong>{{ prop.title }}</strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-1"></i> Cancel
+        </button>
+        <form method="post" action="{% url 'delete_property' prop.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">
+                <i class="bi bi-trash me-1"></i> Yes, Delete
+            </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="text-muted text-center">No properties found. Click "Add Property" to create one.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+
+      <!-- === Applications Section === -->
+      {% if section == "applications" %}
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="text-success"><i class="bi bi-people me-2"></i> All Applications</h5>
+          <ul class="list-group list-group-flush">
+            {% for app in applications %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ app.user.full_name }}</strong> applied for 
+                <em>{{ app.property.title }}</em>
+                <br>
+                <small class="text-muted">{{ app.start_date }} → {{ app.end_date }}</small>
+              </div>
+              <div>
+                {% if app.status == "pending" %}
+                  <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="booking_id" value="{{ app.id }}">
+                    <button type="submit" name="action" value="approve" class="btn btn-sm btn-success">Approve</button>
+                    <button type="submit" name="action" value="reject" class="btn btn-sm btn-danger">Reject</button>
+                  </form>
+                {% elif app.status == "approved" %}
+                  <span class="badge bg-success">Approved</span>
+                {% else %}
+                  <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+              </div>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-muted">No applications found</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- === Bookings Section === -->
+      {% if section == "bookings" %}
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="text-success"><i class="bi bi-calendar-check me-2"></i> All Bookings</h5>
+          <ul class="list-group list-group-flush">
+            {% for booking in bookings %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ booking.user.full_name }}</strong> booked 
+                <em>{{ booking.property.title }}</em>
+                <br>
+                <small class="text-muted">{{ booking.start_date }} → {{ booking.end_date }}</small>
+              </div>
+              <div>
+                <span class="badge 
+                      {% if booking.status == 'approved' %} bg-success 
+                      {% elif booking.status == 'pending' %} bg-warning text-dark 
+                      {% else %} bg-danger {% endif %}">
+                  {{ booking.status|capfirst }}
+                </span>
+              </div>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-muted">No bookings yet</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- === Payments Section === -->
+      {% if section == "payments" %}
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="text-success"><i class="bi bi-cash-coin me-2"></i> Recent Payments</h5>
+          <ul class="list-group list-group-flush">
+            {% for pay in payments %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ pay.booking.user.full_name }}</strong> paid for 
+                <em>{{ pay.booking.property.title }}</em>
+                <br>
+                <small class="text-muted">{{ pay.date|date:"d M Y H:i" }}</small>
+              </div>
+              <div>
+                <span class="fw-bold 
+                      {% if pay.status == 'received' %} text-success 
+                      {% elif pay.status == 'pending' %} text-warning 
+                      {% else %} text-danger {% endif %}">
+                  ₹{{ pay.amount }} ({{ pay.status|capfirst }})
+                </span>
+              </div>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-muted">No payments yet</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- === Maintenance Section === -->
+      {% if section == "maintenance" %}
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="text-success"><i class="bi bi-tools me-2"></i> Recent Maintenance Requests</h5>
+          <ul class="list-group list-group-flush">
+            {% for req in maintenance_requests %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ req.tenant.first_name }} {{ req.tenant.last_name }}</strong> requested 
+                <em>{{ req.issue }}</em> ({{ req.get_category_display }}) 
+                for <span class="fw-bold">{{ req.property.title }}</span>
+                <br>
+                <small class="text-muted">{{ req.created_at|date:"d M Y H:i" }}</small>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge 
+                      {% if req.status == 'pending' %} bg-warning text-dark 
+                      {% elif req.status == 'in_progress' %} bg-info text-dark 
+                      {% elif req.status == 'completed' %} bg-success {% endif %}">
+                  {{ req.get_status_display }}
+                </span>
+                {% if req.status != "completed" %}
+                  <form method="post" action="{% url 'update_maintenance' req.id %}">
+                    {% csrf_token %}
+                    {% if req.status == "pending" %}
+                      <button type="submit" name="status" value="in_progress" class="btn btn-sm btn-info text-white">Start</button>
+                    {% endif %}
+                    <button type="submit" name="status" value="completed" class="btn btn-sm btn-success">Done</button>
+                  </form>
+                {% endif %}
+              </div>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-muted">No maintenance requests yet</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- === Profile Section === -->
+      {% if section == "profile" %}
+      <div class="card shadow p-4">
+        <div class="d-flex align-items-center mb-4">
+          <i class="bi bi-person-circle" style="font-size: 3rem; color:#198754;"></i>
+          <div class="ms-3">
+            <h4 class="fw-bold">{{ landlord.first_name }} {{ landlord.last_name }}</h4>
+            <p class="text-muted mb-0">{{ landlord.email }}</p>
+          </div>
+        </div>
+
+        <h5 class="mb-3 text-success">Profile Information</h5>
+        <ul class="list-group mb-3">
+          <li class="list-group-item"><strong>📧 Email:</strong> {{ landlord.email }}</li>
+          <li class="list-group-item"><strong>👤 Full Name:</strong> {{ landlord.first_name }} {{ landlord.last_name }}</li>
+          <li class="list-group-item"><strong>📱 Phone:</strong> {{ landlord.phone_number|default:"Not added" }}</li>
+          <li class="list-group-item"><strong>🏠 Address:</strong> {{ landlord.address|default:"Not added" }}</li>
+          <li class="list-group-item"><strong>📅 Joined:</strong> {{ landlord.date_joined|date:"F j, Y" }}</li>
+        </ul>
+
+        <a href="{% url 'edit_profile' %}" class="btn btn-outline-success">
+          <i class="bi bi-pencil-square"></i> Edit Profile
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Sidebar custom style for green links -->
+<style>
+.nav-pills .nav-link {
+    color: #198754;  /* default green text */
+    font-weight: 500;
+}
+.nav-pills .nav-link.active {
+    background-color: #198754 !important;  /* green background */
+    color: #fff !important;               /* white text */
+}
+.nav-pills .nav-link:hover {
+    color: #155d32; /* slightly darker green on hover */
+}
+</style>
+
+{% endblock %}

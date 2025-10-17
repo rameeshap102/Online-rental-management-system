@@ -1,0 +1,76 @@
+{% extends 'rentalapp/base.html' %}
+
+{% block content %}
+<!-- ===============================
+     BOOKING HISTORY PAGE
+     File: booking_history.html
+     Purpose: Displays all booking records 
+     of the logged-in tenant, including 
+     property details, booking status, 
+     and payment information.
+   =============================== -->
+
+<div class="container mt-4">
+    <!-- Page Title -->
+    <h2 class="mb-4">📑 My Booking History</h2>
+
+    {% if bookings %}
+        <div class="row">
+            {% for b in bookings %}
+            <div class="col-md-6">
+                <!-- Individual Booking Card -->
+                <div class="card mb-4 shadow-sm">
+                    
+                    <!-- Property Image -->
+                    {% if b.property.image %}
+                        <img src="{{ b.property.image.url }}" 
+                             class="card-img-top" 
+                             alt="{{ b.property.title }}" 
+                             style="height:200px; object-fit:cover;">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <!-- Property Title -->
+                        <h5 class="card-title">{{ b.property.title }}</h5>
+
+                        <!-- Property & Booking Details -->
+                        <p class="card-text">
+                            <strong>📍 District:</strong> {{ b.property.get_district_display }} <br>
+                            <strong>🏠 Address:</strong> {{ b.property.address }} <br>
+                            <strong>💰 Rent:</strong> ₹{{ b.property.rent }} / month <br>
+                            <strong>📅 Booking:</strong> {{ b.start_date }} → {{ b.end_date }} <br>
+
+                            <!-- Booking Status Badge -->
+                            <strong>📌 Status:</strong> 
+                            <span class="badge 
+                                {% if b.status == 'approved' %} bg-success 
+                                {% elif b.status == 'pending' %} bg-warning 
+                                {% else %} bg-danger {% endif %}">
+                                {{ b.get_status_display }}
+                            </span>
+                        </p>
+
+                        <!-- Payment Details (if available) -->
+                        {% if b.payment_set.exists %}
+                            <p>
+                                <strong>💳 Payment:</strong> 
+                                ₹{{ b.payment_set.last.amount }} - {{ b.payment_set.last.get_status_display }}
+                            </p>
+                        {% endif %}
+
+                        <!-- Link to Property Detail -->
+                        <a href="{% url 'property_detail' b.property.id %}" 
+                           class="btn btn-sm btn-outline-primary">
+                            View Property
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Message if no bookings are available -->
+        <div class="alert alert-info">No bookings found.</div>
+    {% endif %}
+</div>
+{% endblock %}

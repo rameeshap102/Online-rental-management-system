@@ -1,0 +1,120 @@
+{% extends "rentalapp/base.html" %}
+{% load static %}
+
+{% block title %}Sign Up - RentEasy{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+          <h3 class="text-center mb-4 fw-bold">
+            <i class="bi bi-person-plus-fill text-success"></i> Create Account
+          </h3>
+
+          <!-- Show form errors -->
+          {% if form.errors %}
+            <div class="alert alert-danger">
+              {{ form.errors }}
+            </div>
+          {% endif %}
+
+          <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <!-- Role Selector -->
+            <div class="mb-4 text-center">
+              <label class="form-label d-block mb-2">I am a</label>
+              <div class="btn-group" role="group" aria-label="Role Selector">
+                <input type="radio" class="btn-check" name="role" id="tenant" value="tenant"
+                  {% if form.role.value == "tenant" %}checked{% endif %}>
+                <label class="btn {% if form.role.value == 'tenant' %}btn-success{% else %}btn-outline-success{% endif %} rounded-pill me-1" for="tenant">
+                  <i class="bi bi-person"></i> Tenant
+                </label>
+
+                <input type="radio" class="btn-check" name="role" id="landlord" value="landlord"
+                  {% if form.role.value == "landlord" %}checked{% endif %}>
+                <label class="btn {% if form.role.value == 'landlord' %}btn-success{% else %}btn-outline-success{% endif %} rounded-pill" for="landlord">
+                  <i class="bi bi-building"></i> Landlord
+                </label>
+              </div>
+              {% if form.role.errors %}
+                <small class="text-danger d-block mt-1">{{ form.role.errors.0 }}</small>
+              {% endif %}
+            </div>
+
+            <!-- Full Name -->
+            <div class="mb-3">
+              <label class="form-label">Full Name</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                {{ form.full_name }}
+              </div>
+              {% if form.full_name.errors %}
+                <small class="text-danger">{{ form.full_name.errors.0 }}</small>
+              {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label">Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                {{ form.email }}
+              </div>
+              {% if form.email.errors %}
+                <small class="text-danger">{{ form.email.errors.0 }}</small>
+              {% endif %}
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+              <label class="form-label">Phone Number</label>
+              <div class="input-group">
+                {{ form.country_code }}
+                {{ form.phone_number }}
+              </div>
+              {% if form.phone_number.errors %}
+                <small class="text-danger">{{ form.phone_number.errors.0 }}</small>
+              {% endif %}
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                {{ form.password1 }}
+              </div>
+              {% if form.password1.errors %}
+                <small class="text-danger">{{ form.password1.errors.0 }}</small>
+              {% endif %}
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-3">
+              <label class="form-label">Confirm Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                {{ form.password2 }}
+              </div>
+              {% if form.password2.errors %}
+                <small class="text-danger">{{ form.password2.errors.0 }}</small>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Sign Up</button>
+          </form>
+
+          <p class="text-center mt-3 mb-0">
+            Already have an account? <a href="{% url 'login' %}">Login here</a>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

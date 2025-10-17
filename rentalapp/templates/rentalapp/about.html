@@ -1,0 +1,93 @@
+{% extends "rentalapp/base.html" %}
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<!-- ===============================
+     ABOUT US PAGE
+     File: about_us.html
+     Purpose: Provides information about RentNest, 
+     including mission, features, values, and call to action.
+   =============================== -->
+
+<div class="container py-5">
+
+  <!-- Hero Section -->
+  <div class="text-center mb-5">
+    <h1 class="fw-bold">About RentNest</h1>
+    <p class="lead text-muted">
+      Making house renting in Kerala simple, smart, and stress-free.
+    </p>
+  </div>
+
+  <!-- Mission Section -->
+  <div class="row align-items-center mb-5">
+    <div class="col-md-6">
+      <img src="https://cdn-icons-png.flaticon.com/512/6195/6195699.png" 
+           alt="Our Mission" class="img-fluid rounded shadow">
+    </div>
+    <div class="col-md-6">
+      <h3 class="fw-bold">Our Mission</h3>
+      <p>
+        RentNest is designed to bridge the gap between <strong>landlords and tenants</strong> across Kerala. 
+        Our goal is to make the process of finding, listing, and renting properties as 
+        seamless as possible with a user-friendly platform that brings 
+        <em>trust, convenience, and transparency</em> to everyone.
+      </p>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="mb-5">
+    <h3 class="fw-bold text-center mb-4">Why Choose RentNest?</h3>
+    <div class="row text-center">
+      
+      <!-- Feature 1: Easy Property Search -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow border-0">
+          <div class="card-body">
+            <h5 class="fw-bold">Easy Property Search</h5>
+            <p>Search rentals by district, location, or property type with just a few clicks.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 2: For Landlords -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow border-0">
+          <div class="card-body">
+            <h5 class="fw-bold">For Landlords</h5>
+            <p>List your property, manage bookings, and connect directly with tenants securely.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 3: For Tenants -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow border-0">
+          <div class="card-body">
+            <h5 class="fw-bold">For Tenants</h5>
+            <p>Discover verified rentals, book instantly, and track your rental history with ease.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Values Section -->
+  <div class="text-center mb-5">
+    <h3 class="fw-bold">Our Values</h3>
+    <p class="text-muted">We believe in simplicity, transparency, and trust.</p>
+  </div>
+
+  <!-- Call to Action Section -->
+  <div class="text-center bg-light p-5 rounded shadow">
+    <h2 class="fw-bold">Start Your Journey with RentNest Today</h2>
+    <p class="lead text-muted">
+      Find your dream rental home or list your property in just a few steps.
+    </p>
+    <a href="{% url 'get_started' %}" class="btn btn-primary btn-lg rounded-pill">Get Started</a>
+  </div>
+
+</div>
+{% endblock %}

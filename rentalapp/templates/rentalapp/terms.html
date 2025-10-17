@@ -1,0 +1,99 @@
+{% extends "rentalapp/base.html" %}
+{% block title %}Terms of Service - RentEasy{% endblock %}
+
+{% block content %}
+<!-- ===============================
+     TERMS OF SERVICE PAGE
+     File: terms_of_service.html
+     Purpose: Define rules, responsibilities, and limitations for platform use.
+   =============================== -->
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+
+      <!-- Card Wrapper -->
+      <div class="card shadow-sm rounded-3 border-0">
+        <div class="card-body p-5">
+
+          <!-- Page Header -->
+          <h1 class="fw-bold mb-4 text-success">
+            <i class="bi bi-file-earmark-text me-2"></i> Terms of Service
+          </h1>
+
+          <!-- Introduction -->
+          <p class="text-muted">
+            Welcome to <strong>RentEasy</strong>. By accessing or using our platform, 
+            you agree to the following terms and conditions.
+          </p>
+
+          <!-- Section 1 -->
+          <h4 class="mt-4">1. Acceptance of Terms</h4>
+          <p>
+            By registering or using RentEasy, you confirm that you have read, 
+            understood, and agree to these Terms of Service.
+          </p>
+
+          <!-- Section 2 -->
+          <h4 class="mt-4">2. User Roles</h4>
+          <p>
+            RentEasy connects <strong>landlords</strong> and <strong>tenants</strong>. 
+            Each role has specific rights and responsibilities. Misuse of your account 
+            may result in suspension.
+          </p>
+
+          <!-- Section 3 -->
+          <h4 class="mt-4">3. Property Listings</h4>
+          <p>
+            Landlords are responsible for the accuracy of property details. RentEasy 
+            is not liable for false or misleading listings.
+          </p>
+
+          <!-- Section 4 -->
+          <h4 class="mt-4">4. Bookings & Payments</h4>
+          <p>
+            All bookings must comply with our policies. RentEasy is not responsible 
+            for disputes between landlords and tenants.
+          </p>
+
+          <!-- Section 5 -->
+          <h4 class="mt-4">5. Privacy Policy</h4>
+          <p>
+            Your data will be protected in accordance with our 
+            <a href="{% url 'privacy' %}">Privacy Policy</a>.
+          </p>
+
+          <!-- Section 6 -->
+          <h4 class="mt-4">6. Prohibited Use</h4>
+          <ul>
+            <li>Posting illegal or fraudulent content</li>
+            <li>Harassing or misusing the platform</li>
+            <li>Attempting unauthorized access to other accounts</li>
+          </ul>
+
+          <!-- Section 7 -->
+          <h4 class="mt-4">7. Limitation of Liability</h4>
+          <p>
+            RentEasy provides the platform "as is". We are not liable for any 
+            damages resulting from the use of our services.
+          </p>
+
+          <!-- Section 8 -->
+          <h4 class="mt-4">8. Changes to Terms</h4>
+          <p>
+            We may update these terms at any time. Continued use of the platform 
+            after changes means you accept the new terms.
+          </p>
+
+          <!-- Last Updated Note -->
+          <p class="mt-5 text-muted">
+            Last updated: September 2025
+          </p>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

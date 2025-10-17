@@ -1,0 +1,12 @@
+{% extends "rentalapp/base.html" %}
+{% block content %}
+<div class="container my-5 text-center">
+  <h3>Confirm Payment</h3>
+  <p>Pay ₹{{ booking.property.rent }} for <strong>{{ booking.property.title }}</strong></p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-success">Confirm Payment</button>
+    <a href="{% url 'tenant_payments' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

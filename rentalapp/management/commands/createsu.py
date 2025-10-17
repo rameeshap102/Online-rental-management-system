@@ -1,22 +1,25 @@
 ﻿from django.core.management.base import BaseCommand
 from rentalapp.models import CustomUser
-import os
 
 class Command(BaseCommand):
     help = 'Creates a superuser if it does not exist'
 
     def handle(self, *args, **options):
-        username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin')
-        email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@rental.com')
-        password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin@123')
+        email = 'admin@rental.com'
+        password = 'admin@123'
         
-        if not CustomUser.objects.filter(username=username).exists():
-            CustomUser.objects.create_superuser(
-                username=username,
+        if not CustomUser.objects.filter(email=email).exists():
+            user = CustomUser.objects.create(
                 email=email,
-                password=password,
-                user_type='landlord'
+                first_name='Admin',
+                last_name='User',
+                role='landlord',
+                is_staff=True,
+                is_superuser=True,
+                is_active=True
             )
-            self.stdout.write(self.style.SUCCESS(f'✅ Superuser created: {username}'))
+            user.set_password(password)
+            user.save()
+            self.stdout.write(self.style.SUCCESS(f'✅ Superuser created: {email}'))
         else:
             self.stdout.write(self.style.WARNING('⚠️ Superuser already exists'))
